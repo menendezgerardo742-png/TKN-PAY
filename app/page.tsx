@@ -1,5 +1,8 @@
-import { ArrowUpRight } from "lucide-react";
+"use client";
+ 
+import { ArrowUpRight, Copy, Check } from "lucide-react";
 import Image from "next/image";
+import { useState, useCallback } from "react";
  
 const PayPalIcon = () => (
   <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
@@ -25,63 +28,176 @@ const ApplePayIcon = () => (
   </svg>
 );
  
-const CryptoIcon = () => (
+const BitcoinIcon = () => (
   <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
     <path d="M23.638 14.904c-1.602 6.43-8.113 10.34-14.542 8.736C2.67 22.05-1.244 15.525.362 9.105 1.962 2.67 8.475-1.243 14.9.358c6.43 1.605 10.342 8.115 8.738 14.546zm-6.35-4.613c.24-1.59-.974-2.45-2.64-3.03l.54-2.153-1.315-.33-.525 2.107c-.345-.087-.7-.168-1.05-.25l.527-2.116L11.51 4.19l-.54 2.153c-.285-.066-.565-.13-.835-.2l.002-.007-1.815-.455-.35 1.407s.975.224.955.238c.535.136.63.494.614.78l-.614 2.457c.037.01.083.024.135.046l-.137-.035-.86 3.45c-.065.16-.23.4-.6.31.013.02-.96-.24-.96-.24L4.73 15.57l1.714.43c.318.08.63.163.938.24l-.545 2.19 1.315.328.54-2.157c.36.098.71.188 1.05.27l-.538 2.146 1.315.328.545-2.186c2.245.424 3.93.254 4.64-1.774.57-1.637-.03-2.58-1.217-3.196.866-.2 1.518-.77 1.69-1.93h.003zm-3.022 4.238c-.404 1.64-3.157.75-4.05.53l.723-2.9c.893.223 3.75.663 3.327 2.37zm.406-4.26c-.37 1.49-2.662.733-3.405.548l.655-2.63c.744.186 3.137.534 2.75 2.082z" />
   </svg>
 );
  
-const paymentMethods = [
+const EthereumIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
+    <path d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" />
+  </svg>
+);
+ 
+const USDTIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
+    <path d="M12 0C5.374 0 0 5.374 0 12s5.374 12 12 12 12-5.374 12-12S18.626 0 12 0zm5.58 13.643c-.058.037-.452.233-1.903.66-1.022.3-2.417.54-3.677.618v3.554h-1.5v-3.5c-1.295-.042-2.532-.217-3.555-.478v-1.5c1.135.31 2.532.53 3.555.575v-3.07c-1.77-.25-3.07-.843-3.07-1.64 0-.97 1.803-1.752 4.07-1.752s4.07.782 4.07 1.752c0 .783-1.216 1.352-2.898 1.614v3.072c1.287-.08 2.545-.308 3.485-.587l.523-.17v1.452l-.1.044zm-3.58-3.38c1.634 0 2.96-.414 2.96-.924 0-.51-1.326-.924-2.96-.924-1.634 0-2.96.414-2.96.924 0 .51 1.326.924 2.96.924z" />
+  </svg>
+);
+ 
+const BNBIcon = () => (
+  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor">
+    <path d="M16.624 13.92l2.717 2.716-7.353 7.353-7.352-7.352 2.717-2.717 4.636 4.636 4.635-4.636zm4.636-4.636L24 12l-2.74 2.74-2.72-2.72 2.72-2.736zm-9.272-9.272L19.34 7.364l-2.717 2.716-4.636-4.636-4.636 4.636L4.636 7.364l7.352-7.352zm-9.272 9.272L0 12l2.716 2.716 2.716-2.716-2.716-2.716zM12 9.248l2.752 2.752L12 14.752 9.248 12 12 9.248z" />
+  </svg>
+);
+ 
+function CopyButton({ text, label }: { text: string; label: string }) {
+  const [copied, setCopied] = useState(false);
+ 
+  const handleCopy = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [text]);
+ 
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-gray-300 transition-all hover:bg-white/10 hover:text-white"
+    >
+      {copied ? (
+        <>
+          <Check className="h-3.5 w-3.5 text-green-400" />
+          <span className="text-green-400">Copiado</span>
+        </>
+      ) : (
+        <>
+          <Copy className="h-3.5 w-3.5" />
+          <span>{label}</span>
+        </>
+      )}
+    </button>
+  );
+}
+ 
+interface PaymentMethod {
+  name: string;
+  description: string;
+  icon: React.FC;
+  href: string;
+  color: string;
+  bgColor: string;
+  borderColor: string;
+  details: { label: string; value: string; copyLabel: string }[];
+}
+ 
+const paymentMethods: PaymentMethod[] = [
   {
     name: "PayPal",
     description: "Pago seguro con tu cuenta PayPal",
     icon: PayPalIcon,
-    href: "https://www.paypal.com/paypalme@EddisonRibero18/",
+    href: "https://www.paypal.com/paypalme/TU_USUARIO",
     color: "#0070ba",
     bgColor: "rgba(0, 112, 186, 0.15)",
     borderColor: "rgba(0, 112, 186, 0.4)",
+    details: [
+      { label: "Email", value: "tkncommunity@paypal.com", copyLabel: "Copiar Email" },
+    ],
   },
   {
     name: "Cash App",
     description: "Envia dinero rapido con Cash App",
     icon: CashAppIcon,
-    href: "https://cash.app/$tkncomunnityy",
+    href: "https://cash.app/$TU_CASHTAG",
     color: "#00d632",
     bgColor: "rgba(0, 214, 50, 0.15)",
     borderColor: "rgba(0, 214, 50, 0.4)",
+    details: [
+      { label: "Usuario", value: "@TKNCommunity", copyLabel: "Copiar Usuario" },
+      { label: "Telefono", value: "+584241234567", copyLabel: "Copiar Telefono" },
+    ],
   },
   {
     name: "Zelle",
     description: "Transferencia directa con Zelle",
     icon: ZelleIcon,
-    href: "#941-290-8108",
+    href: "#",
     color: "#6c1cd3",
     bgColor: "rgba(108, 28, 211, 0.15)",
     borderColor: "rgba(108, 28, 211, 0.4)",
+    details: [
+      { label: "Email", value: "tkncommunity@bank.com", copyLabel: "Copiar Email" },
+      { label: "Nombre", value: "TKN Community Inc.", copyLabel: "Copiar Nombre" },
+    ],
   },
   {
     name: "Apple Pay",
     description: "Paga facilmente con Apple Pay",
     icon: ApplePayIcon,
-    href: "#941-290-8108",
+    href: "#",
     color: "#ffffff",
     bgColor: "rgba(255, 255, 255, 0.08)",
     borderColor: "rgba(255, 255, 255, 0.3)",
+    details: [
+      { label: "Email", value: "tkncommunity@icloud.com", copyLabel: "Copiar Email" },
+    ],
   },
+];
+ 
+const cryptoWallets = [
   {
-    name: "Crypto",
-    description: "Bitcoin, Ethereum y mas criptomonedas",
-    icon: CryptoIcon,
-    href: "#",
+    name: "Bitcoin",
+    symbol: "BTC",
+    icon: BitcoinIcon,
+    address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
     color: "#f7931a",
     bgColor: "rgba(247, 147, 26, 0.15)",
     borderColor: "rgba(247, 147, 26, 0.4)",
   },
+  {
+    name: "Ethereum",
+    symbol: "ETH",
+    icon: EthereumIcon,
+    address: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+    color: "#627eea",
+    bgColor: "rgba(98, 126, 234, 0.15)",
+    borderColor: "rgba(98, 126, 234, 0.4)",
+  },
+  {
+    name: "USDT (ERC20)",
+    symbol: "USDT",
+    icon: USDTIcon,
+    address: "0x742d35Cc6634C0532925a3b844Bc878e95d95fB5",
+    color: "#26a17b",
+    bgColor: "rgba(38, 161, 123, 0.15)",
+    borderColor: "rgba(38, 161, 123, 0.4)",
+  },
+  {
+    name: "BNB",
+    symbol: "BNB",
+    icon: BNBIcon,
+    address: "bnb1xlvns0c2e6j4v97l3q5tq0y0l4x9q2j6k8m3n4",
+    color: "#f3ba2f",
+    bgColor: "rgba(243, 186, 47, 0.15)",
+    borderColor: "rgba(243, 186, 47, 0.4)",
+  },
 ];
  
 export default function Home() {
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+ 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16 overflow-hidden">
+    <div className="relative flex min-h-screen flex-col items-center px-4 py-16 overflow-hidden">
       {/* Background image - TKN logo */}
       <div className="absolute inset-0 z-0">
         <Image
@@ -96,7 +212,6 @@ export default function Home() {
  
       {/* Purple rays falling from top */}
       <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
-        {/* Main rays */}
         <div className="absolute top-0 left-[10%] h-[70vh] w-[2px] bg-gradient-to-b from-[#8b5cf6] via-[#8b5cf6]/30 to-transparent opacity-60 animate-ray-1" />
         <div className="absolute top-0 left-[25%] h-[80vh] w-[3px] bg-gradient-to-b from-[#a78bfa] via-[#7c3aed]/20 to-transparent opacity-50 animate-ray-2" />
         <div className="absolute top-0 left-[40%] h-[60vh] w-[1px] bg-gradient-to-b from-[#8b5cf6] via-[#8b5cf6]/25 to-transparent opacity-70 animate-ray-3" />
@@ -125,7 +240,7 @@ export default function Home() {
         <div className="absolute bottom-1/4 right-1/3 h-72 w-72 rounded-full bg-[#7c3aed]/10 blur-3xl" />
       </div>
  
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 w-full max-w-lg">
         {/* Logo */}
         <div className="mb-10 text-center">
           <div className="mx-auto mb-5 relative h-28 w-64">
@@ -142,47 +257,180 @@ export default function Home() {
           </p>
         </div>
  
-        {/* Payment Links */}
+        {/* Payment Methods - vertical list */}
         <div className="flex flex-col gap-3">
           {paymentMethods.map((method) => (
-            <a
-              key={method.name}
-              href={method.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex items-center gap-4 rounded-xl border px-5 py-4 backdrop-blur-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg"
-              style={{
-                backgroundColor: method.bgColor,
-                borderColor: method.borderColor,
-              }}
-            >
-              <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
-                style={{ backgroundColor: method.bgColor, color: method.color }}
+            <div key={method.name} className="flex flex-col">
+              <button
+                onClick={() =>
+                  setExpandedCard(
+                    expandedCard === method.name ? null : method.name
+                  )
+                }
+                className="group flex items-center gap-4 rounded-xl border px-5 py-4 backdrop-blur-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg w-full text-left"
+                style={{
+                  backgroundColor: method.bgColor,
+                  borderColor: method.borderColor,
+                }}
               >
-                <method.icon />
-              </div>
-              <div className="flex-1">
-                <h3
-                  className="text-base font-semibold"
-                  style={{ color: method.color }}
+                <div
+                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
+                  style={{
+                    backgroundColor: method.bgColor,
+                    color: method.color,
+                  }}
                 >
-                  {method.name}
-                </h3>
-                <p className="text-xs text-gray-400">{method.description}</p>
-              </div>
-              <ArrowUpRight
-                className="h-5 w-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                style={{ color: method.color }}
-              />
-            </a>
+                  <method.icon />
+                </div>
+                <div className="flex-1">
+                  <h3
+                    className="text-base font-semibold"
+                    style={{ color: method.color }}
+                  >
+                    {method.name}
+                  </h3>
+                  <p className="text-xs text-gray-400">{method.description}</p>
+                </div>
+                <ArrowUpRight
+                  className={`h-5 w-5 transition-transform duration-200 ${
+                    expandedCard === method.name ? "rotate-90" : ""
+                  }`}
+                  style={{ color: method.color }}
+                />
+              </button>
+ 
+              {/* Expanded details */}
+              {expandedCard === method.name && (
+                <div
+                  className="mt-1 rounded-xl border px-5 py-4 backdrop-blur-md"
+                  style={{
+                    backgroundColor: method.bgColor,
+                    borderColor: method.borderColor,
+                  }}
+                >
+                  <div className="flex flex-col gap-3">
+                    {method.details.map((detail) => (
+                      <div
+                        key={detail.label}
+                        className="flex items-center justify-between gap-3"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[10px] uppercase tracking-wider text-gray-500">
+                            {detail.label}
+                          </p>
+                          <p className="truncate font-mono text-sm text-gray-200">
+                            {detail.value}
+                          </p>
+                        </div>
+                        <CopyButton
+                          text={detail.value}
+                          label={detail.copyLabel}
+                        />
+                      </div>
+                    ))}
+                    {method.href !== "#" && (
+                      <a
+                        href={method.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-1 flex items-center justify-center gap-2 rounded-lg py-2 text-sm font-medium transition-all hover:opacity-80"
+                        style={{
+                          backgroundColor: method.color,
+                          color: method.color === "#ffffff" ? "#000" : "#fff",
+                        }}
+                      >
+                        Ir a {method.name}
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </div>
  
+        {/* Crypto Section */}
+        <div className="mt-8">
+          <h2 className="mb-4 text-center text-lg font-bold text-[#8b5cf6]">
+            Criptomonedas
+          </h2>
+          <div className="flex flex-col gap-3">
+            {cryptoWallets.map((crypto) => (
+              <div key={crypto.symbol} className="flex flex-col">
+                <button
+                  onClick={() =>
+                    setExpandedCard(
+                      expandedCard === crypto.symbol ? null : crypto.symbol
+                    )
+                  }
+                  className="group flex items-center gap-4 rounded-xl border px-5 py-4 backdrop-blur-md transition-all duration-200 hover:scale-[1.02] hover:shadow-lg w-full text-left"
+                  style={{
+                    backgroundColor: crypto.bgColor,
+                    borderColor: crypto.borderColor,
+                  }}
+                >
+                  <div
+                    className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg"
+                    style={{
+                      backgroundColor: crypto.bgColor,
+                      color: crypto.color,
+                    }}
+                  >
+                    <crypto.icon />
+                  </div>
+                  <div className="flex-1">
+                    <h3
+                      className="text-base font-semibold"
+                      style={{ color: crypto.color }}
+                    >
+                      {crypto.name}
+                    </h3>
+                    <p className="text-xs text-gray-400">{crypto.symbol}</p>
+                  </div>
+                  <ArrowUpRight
+                    className={`h-5 w-5 transition-transform duration-200 ${
+                      expandedCard === crypto.symbol ? "rotate-90" : ""
+                    }`}
+                    style={{ color: crypto.color }}
+                  />
+                </button>
+ 
+                {expandedCard === crypto.symbol && (
+                  <div
+                    className="mt-1 rounded-xl border px-5 py-4 backdrop-blur-md"
+                    style={{
+                      backgroundColor: crypto.bgColor,
+                      borderColor: crypto.borderColor,
+                    }}
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] uppercase tracking-wider text-gray-500">
+                          Direccion {crypto.symbol}
+                        </p>
+                        <p className="truncate font-mono text-xs text-gray-200">
+                          {crypto.address}
+                        </p>
+                      </div>
+                      <CopyButton text={crypto.address} label="Copiar" />
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+ 
         {/* Footer */}
-        <p className="mt-8 text-center text-xs text-gray-500">
-          TKN COMMUNITY &copy; {new Date().getFullYear()}
-        </p>
+        <div className="mt-10 text-center">
+          <p className="text-xs text-gray-500">
+            TKN COMMUNITY &copy; {new Date().getFullYear()}
+          </p>
+          <p className="mt-1 text-[10px] text-gray-600">
+            Trascendiendo los limites financieros
+          </p>
+        </div>
       </div>
     </div>
   );

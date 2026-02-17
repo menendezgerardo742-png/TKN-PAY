@@ -1,35 +1,131 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
 
-/* ---------------- GLOBAL BASE ---------------- */
+@custom-variant dark (&:is(.dark *));
 
-html,
-body {
-  background-color: #0a0a0f;
-  color: white;
-  scroll-behavior: smooth;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-/* ---------------- PULSE GLOW ---------------- */
+:root {
+  --radius: 0.625rem;
+  --background: #0a0a0f;
+  --foreground: #e8e8f0;
+  --card: #12121a;
+  --card-foreground: #e8e8f0;
+  --popover: #12121a;
+  --popover-foreground: #e8e8f0;
+  --primary: #8b5cf6;
+  --primary-foreground: #ffffff;
+  --secondary: #1a1a2e;
+  --secondary-foreground: #e8e8f0;
+  --muted: #16162a;
+  --muted-foreground: #8888aa;
+  --accent: #7c3aed;
+  --accent-foreground: #ffffff;
+  --destructive: #ef4444;
+  --border: #2a2a40;
+  --input: #1e1e32;
+  --ring: #8b5cf6;
+  --chart-1: #8b5cf6;
+  --chart-2: #06b6d4;
+  --chart-3: #f59e0b;
+  --chart-4: #ec4899;
+  --chart-5: #10b981;
+  --sidebar: #0f0f1a;
+  --sidebar-foreground: #e8e8f0;
+  --sidebar-primary: #8b5cf6;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #1a1a2e;
+  --sidebar-accent-foreground: #e8e8f0;
+  --sidebar-border: #2a2a40;
+  --sidebar-ring: #8b5cf6;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Neon glow effects */
+.neon-purple {
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 0 45px rgba(139, 92, 246, 0.2);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(139, 92, 246, 0.8), 0 0 40px rgba(139, 92, 246, 0.4);
+}
+
+.neon-border {
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.15), inset 0 0 10px rgba(139, 92, 246, 0.05);
+}
+
+.gradient-bg {
+  background: radial-gradient(ellipse at top, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
+              radial-gradient(ellipse at bottom right, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+              #0a0a0f;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
 
 @keyframes pulse-glow {
-  0%, 100% { 
-    opacity: 0.6; 
-    transform: scale(1);
-  }
-  50% { 
-    opacity: 1; 
-    transform: scale(1.03);
-  }
+  0%, 100% { box-shadow: 0 0 15px rgba(139, 92, 246, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(139, 92, 246, 0.7), 0 0 60px rgba(139, 92, 246, 0.3); }
 }
 
 .animate-pulse-glow {
-  animation: pulse-glow 2.5s ease-in-out infinite;
+  animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* ---------------- PURPLE RAYS ---------------- */
-
+/* Purple rays animations */
 @keyframes ray-fall-1 {
   0% { opacity: 0.6; transform: translateY(-10px); }
   50% { opacity: 0.3; transform: translateY(10px); }
@@ -80,18 +176,7 @@ body {
 .animate-ray-7 { animation: ray-fall-7 3s ease-in-out infinite; }
 .animate-ray-8 { animation: ray-fall-8 7s ease-in-out infinite; }
 
-/* ---------------- SMOOTH HOVER EFFECT ---------------- */
-
-a {
-  transition: all 0.25s ease-in-out;
-}
-
-a:hover {
-  transform: translateY(-2px);
-}
-
-/* ---------------- HIDE NEXT DEV OVERLAY (OPTIONAL) ---------------- */
-
+/* Hide Next.js error overlay portal */
 nextjs-portal {
   display: none !important;
 }
