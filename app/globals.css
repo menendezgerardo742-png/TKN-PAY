@@ -1,26 +1,97 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------- GLOBAL BASE ---------------- */
+
+html,
+body {
+  background-color: #0a0a0f;
+  color: white;
+  scroll-behavior: smooth;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ---------------- PULSE GLOW ---------------- */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes pulse-glow {
+  0%, 100% { 
+    opacity: 0.6; 
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1.03);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* ---------------- PURPLE RAYS ---------------- */
+
+@keyframes ray-fall-1 {
+  0% { opacity: 0.6; transform: translateY(-10px); }
+  50% { opacity: 0.3; transform: translateY(10px); }
+  100% { opacity: 0.6; transform: translateY(-10px); }
+}
+@keyframes ray-fall-2 {
+  0% { opacity: 0.5; transform: translateY(0); }
+  50% { opacity: 0.2; transform: translateY(15px); }
+  100% { opacity: 0.5; transform: translateY(0); }
+}
+@keyframes ray-fall-3 {
+  0% { opacity: 0.7; transform: translateY(-5px); }
+  50% { opacity: 0.35; transform: translateY(8px); }
+  100% { opacity: 0.7; transform: translateY(-5px); }
+}
+@keyframes ray-fall-4 {
+  0% { opacity: 0.45; transform: translateY(5px); }
+  50% { opacity: 0.2; transform: translateY(20px); }
+  100% { opacity: 0.45; transform: translateY(5px); }
+}
+@keyframes ray-fall-5 {
+  0% { opacity: 0.55; transform: translateY(-8px); }
+  50% { opacity: 0.25; transform: translateY(12px); }
+  100% { opacity: 0.55; transform: translateY(-8px); }
+}
+@keyframes ray-fall-6 {
+  0% { opacity: 0.6; transform: translateY(0); }
+  50% { opacity: 0.3; transform: translateY(18px); }
+  100% { opacity: 0.6; transform: translateY(0); }
+}
+@keyframes ray-fall-7 {
+  0% { opacity: 0.4; transform: translateY(-12px); }
+  50% { opacity: 0.15; transform: translateY(6px); }
+  100% { opacity: 0.4; transform: translateY(-12px); }
+}
+@keyframes ray-fall-8 {
+  0% { opacity: 0.35; transform: translateY(3px); }
+  50% { opacity: 0.15; transform: translateY(14px); }
+  100% { opacity: 0.35; transform: translateY(3px); }
+}
+
+.animate-ray-1 { animation: ray-fall-1 4s ease-in-out infinite; }
+.animate-ray-2 { animation: ray-fall-2 5s ease-in-out infinite; }
+.animate-ray-3 { animation: ray-fall-3 3.5s ease-in-out infinite; }
+.animate-ray-4 { animation: ray-fall-4 6s ease-in-out infinite; }
+.animate-ray-5 { animation: ray-fall-5 4.5s ease-in-out infinite; }
+.animate-ray-6 { animation: ray-fall-6 5.5s ease-in-out infinite; }
+.animate-ray-7 { animation: ray-fall-7 3s ease-in-out infinite; }
+.animate-ray-8 { animation: ray-fall-8 7s ease-in-out infinite; }
+
+/* ---------------- SMOOTH HOVER EFFECT ---------------- */
+
+a {
+  transition: all 0.25s ease-in-out;
+}
+
+a:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------------- HIDE NEXT DEV OVERLAY (OPTIONAL) ---------------- */
+
+nextjs-portal {
+  display: none !important;
 }
